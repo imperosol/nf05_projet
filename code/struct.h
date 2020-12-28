@@ -115,3 +115,4 @@ enum circuit
 };//used to describe the circuit taken by a patient
 /*Nobody expects the Spanish Inquisition or this commentary.*/
 #endif // STRUCTURE_H
+

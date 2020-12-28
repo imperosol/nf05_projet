@@ -9,6 +9,7 @@
 #include "input_patients.h"
 #include "sort.h"
 #include "room_management.h"
+#include "gui.h"
 
 
 /********************************************//**
@@ -33,6 +34,7 @@
  *
  * \return EXIT_SUCCESS : no error during the execution
  ***********************************************/
+
 
 int main(int argc, char *argv[])
 {
@@ -117,6 +119,7 @@ int main(int argc, char *argv[])
     /*freeing of memory space for the patient list in the waiting room*/
     free(waitingRoom[4].remainingPatients);
 
+    /***************************************** - GUI START - *****************************************/
 
     if (SDL_Init(SDL_INIT_EVERYTHING) ==-1)/*Initialisation SDL*/{
         printf("window initialization failure due to : %s",SDL_GetError());  exit(EXIT_FAILURE);
@@ -125,23 +128,24 @@ int main(int argc, char *argv[])
     }
 
     SDL_Window* pWindow = NULL;
-    pWindow = SDL_CreateWindow("Projet NF05", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_UNDEFINED, 800, 600, SDL_WINDOW_SHOWN);/*Initialisation cran*/
+    pWindow = SDL_CreateWindow("Hospital management", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_UNDEFINED, 800, 600, SDL_WINDOW_SHOWN);/*Initialisation cran*/
     if (pWindow == NULL){
-        printf("window initialization failure due to : %s",SDL_GetError());  exit(EXIT_FAILURE);
+        printf("window initialization failure due to : %s",SDL_GetError());
+        exit(EXIT_FAILURE);
     }
+
     /*pointers definition*/
     SDL_Renderer* renderer = SDL_CreateRenderer(pWindow,-1,SDL_RENDERER_ACCELERATED);//renderer
     SDL_Surface* icon = NULL;
-    SDL_Surface* title = NULL;//title surface
     SDL_Surface* pageText = NULL;//page text surface
     SDL_Texture* texture = NULL;//The same texture is used and redefined all along the program
-    TTF_Font* title_font = TTF_OpenFont("./font/SEGOEUI.ttf",30);
     TTF_Font* p_font = TTF_OpenFont("./font/SEGOEUI.ttf",14);
 
 
     /*Variables definition*/
     int height, width;
     int tempHeure,tempMinute;
+    unsigned short scroll = 0;
     short patientToPrint = -5;
     char buttonPatient[] = "Patient n°  ";
     char heure[] = "  h  ";
@@ -152,58 +156,45 @@ int main(int argc, char *argv[])
     icon = SDL_LoadBMP("./img/icon.bmp");
     SDL_Rect r;
 
+    display_icon(pWindow);
+
     /*background colour definition*/
     SDL_SetRenderDrawColor(renderer,40,40,40,255);
-    SDL_RenderPresent(renderer);
     SDL_RenderClear(renderer);
 
-    /*Title diplay*/
-    title = TTF_RenderText_Solid(title_font,"Patients infos",text_color);
-    texture = SDL_CreateTextureFromSurface(renderer,title);
-    SDL_QueryTexture(texture,NULL,NULL,&r.w,&r.h);
-    r.x=width/2-r.w/2;
-    r.y=4;//4 pixels from the top of the window
-    SDL_RenderCopy(renderer,texture,NULL,&r);
-    SDL_DestroyTexture(texture);
-    SDL_FreeSurface(title);
-
-    /*Display images on both sides of main title*/
-    r.x=width/4-45;r.w=40;r.h=40;r.y = 5;
-    texture = SDL_CreateTextureFromSurface(renderer,icon);
-    SDL_RenderCopy(renderer,texture,NULL,&r);
-    r.x += width/2 + 50;
-    SDL_RenderCopy(renderer,texture,NULL,&r);
-    SDL_RenderPresent(renderer);
-    SDL_DestroyTexture(texture);
-    SDL_FreeSurface(icon);
-
-    /*Lines and squares on top of the window*/
-    r.x = width/4;r.y = 5;r.w = width/2;r.h = 40;
-    SDL_SetRenderDrawColor(renderer,250,250,250,255);
-    SDL_RenderDrawLine(renderer,5,50,width-5,50);
-    SDL_RenderDrawRect(renderer,&r);
+    display_top_square(renderer, icon, text_color, width, height);
 
     /*Button display*/
     SDL_RenderDrawLine(renderer,width/4,55,width/4,height-5);
-    r.x = 10; r.y = 55;
+    r.x = 10; r.y = 80;
     r.h = 30; r.w = width/4 - 20;
     for (int i=0;i<numberOfPatients;i++) //Draw buttons
     {
         SDL_RenderDrawRect(renderer,&r);
         r.y += 35;
+        if (i == 13)
+        {
+            r.h = 20;
+            SDL_RenderDrawRect(renderer, &r);
+            SDL_RenderDrawLine(renderer,width/8-5, r.y+7, width/8+5, r.y+7);
+            SDL_RenderDrawLine(renderer,width/8-5, r.y+7, width/8, r.y+15);
+            SDL_RenderDrawLine(renderer,width/8, r.y+15, width/8+5, r.y+7);
+            break;
+        }
     }
-    r.x = 20;r.y +=5;
-    for (int i=numberOfPatients; i>0; i--) //Display buttons content
+    r.x = 20;r.y = 50;
+    for (int i=1; i <= numberOfPatients; i++) //Display buttons content
     {
-        r.y -= 35;
+        r.y += 35;
         buttonPatient[11] = (i%10) + '0';
         buttonPatient[10] = (i/10) + '0';
         pageText = TTF_RenderText_Solid(p_font,buttonPatient,text_color);
         texture = SDL_CreateTextureFromSurface(renderer,pageText);
         SDL_QueryTexture(texture,NULL,NULL,&r.w,&r.h);
         SDL_RenderCopy(renderer,texture,NULL,&r);
-        SDL_DestroyTexture(texture);
-        SDL_FreeSurface(pageText);
+        if (i == 14){
+            break;
+        }
     }
 
     /*Creation of the display structure for patient file*/
@@ -265,7 +256,7 @@ int main(int argc, char *argv[])
     SDL_QueryTexture(texture,NULL,NULL,&r.w,&r.h);
     r.y = 238;
     SDL_RenderCopy(renderer,texture,NULL,&r);
-    pageText = TTF_RenderText_Solid(p_font,"Registration duration :",text_color);
+    pageText = TTF_RenderText_Solid(p_font,"Registration end :",text_color);
     texture = SDL_CreateTextureFromSurface(renderer,pageText);
     SDL_QueryTexture(texture,NULL,NULL,&r.w,&r.h);
     r.y = 258;
@@ -469,30 +460,141 @@ int main(int argc, char *argv[])
                 if (event.window.event == SDL_WINDOWEVENT_CLOSE){
                     run = SDL_FALSE;
                 }
+                break;
+
             case SDL_MOUSEBUTTONDOWN:
                 if (event.button.button == SDL_BUTTON_LEFT)
                 {
                     SDL_GetMouseState(&mouse.x,&mouse.y);
                     if (mouse.x>10 && mouse.x<width/4-20)
                     {
+                        /*event click on the up arrow*/
+                        if (mouse.y > 55 && mouse.y < 75 && scroll)
+                        {
+                            if (numberOfPatients - 15 - scroll < 0)//if the down arrow was not displayed previously
+                            {
+                                r.x = 10;
+                                r.y = 570;
+                                r.h = 20;
+                                r.w = width/4 - 20;
+                                SDL_SetRenderDrawColor(renderer,240,240,240,255);
+                                SDL_RenderDrawRect(renderer,&r);
+                                SDL_RenderDrawLine(renderer,width/8-5, r.y+7, width/8+5, r.y+7);
+                                SDL_RenderDrawLine(renderer,width/8-5, r.y+7, width/8, r.y+15);
+                                SDL_RenderDrawLine(renderer,width/8, r.y+15, width/8+5, r.y+7);
+                                SDL_SetRenderDrawColor(renderer,40,40,40,255);
+                            }
+                            scroll--;
+                            if (!scroll)//if the up arrow has to be hidden
+                            {
+                                r.y = 55;r.x = 10;
+                                r.h = 20;
+                                r.w = width/4 - 20;
+                                SDL_RenderFillRect(renderer, &r);
+                            }
+                            r.x = 20;r.y = 50;
+                            for (int i = 1; i < 15; i++)
+                            {
+                                r.y += 35;
+                                buttonPatient[11] = ((i+scroll)%10) + '0';
+                                buttonPatient[10] = ((i+scroll)/10) + '0';
+                                pageText = TTF_RenderText_Solid(p_font,buttonPatient,text_color);
+                                texture = SDL_CreateTextureFromSurface(renderer,pageText);
+                                SDL_QueryTexture(texture,NULL,NULL,&r.w,&r.h);
+                                SDL_RenderFillRect(renderer, &r);
+                                SDL_RenderCopy(renderer,texture,NULL,&r);
+                            }
+                            /*Make the button highlighting move with the scroll*/
+                            if (patientToPrint != -5)
+                            {
+                                SDL_SetRenderDrawColor(renderer,40,40,40,255);
+                                r.x = 12;
+                                r.y = 47 + 35*(patientToPrint - scroll);
+                                if(r.y < 538 && r.y > 35){
+                                    r.h = 26;
+                                    r.w = width/4 - 24;
+                                    SDL_RenderDrawRect(renderer, &r);
+                                    SDL_SetRenderDrawColor(renderer,240,240,240,255);
+                                }if (r.y < 535 && r.y > 30){
+                                    r.y +=35;
+                                    SDL_RenderDrawRect(renderer, &r);
+                                }
+                                SDL_SetRenderDrawColor(renderer,40,40,40,255);
+                            }
+                        }
+                        /*event click on the down arrow*/
+                        else if (mouse.y > 570 && mouse.y < 590 && scroll+14 < numberOfPatients)
+                        {
+                            if (!scroll)//if the up arrow was not displayed previously
+                            {
+                                r.x = 10;
+                                r.y = 55;
+                                r.h = 20;
+                                r.w = width/4 - 20;
+                                SDL_SetRenderDrawColor(renderer,240,240,240,255);
+                                SDL_RenderDrawRect(renderer,&r);
+                                SDL_RenderDrawLine(renderer,width/8-5, r.y+15, width/8+5, r.y+15);
+                                SDL_RenderDrawLine(renderer,width/8-5, r.y+15, width/8, r.y+7);
+                                SDL_RenderDrawLine(renderer,width/8, r.y+7, width/8+5, r.y+15);
+                                SDL_SetRenderDrawColor(renderer,40,40,40,255);
+                            }
+                            scroll++;
+                            if (numberOfPatients - 15 - scroll < 0)//if the down arrow has to be hidden
+                            {
+                                r.y = 570;r.x = 10;
+                                r.h = 20;
+                                r.w = width/4 - 20;
+                                SDL_RenderFillRect(renderer, &r);
+                            }
+                            r.x = 20;r.y = 50;
+                            for (int i = 1; i < 15; i++)
+                            {
+                                r.y += 35;
+                                buttonPatient[11] = ((i+scroll)%10) + '0';
+                                buttonPatient[10] = ((i+scroll)/10) + '0';
+                                pageText = TTF_RenderText_Solid(p_font,buttonPatient,text_color);
+                                texture = SDL_CreateTextureFromSurface(renderer,pageText);
+                                SDL_QueryTexture(texture,NULL,NULL,&r.w,&r.h);
+                                SDL_RenderFillRect(renderer, &r);
+                                SDL_RenderCopy(renderer,texture,NULL,&r);
+                            }
+                            if (patientToPrint != -5)
+                            {
+                                SDL_SetRenderDrawColor(renderer,40,40,40,255);
+                                r.x = 12;
+                                r.y = 117 + 35*(patientToPrint - scroll);
+                                if(r.y > 81 && r.y < 602){
+                                    r.h = 26;
+                                    r.w = width/4 - 24;
+                                    SDL_RenderDrawRect(renderer, &r);
+                                    SDL_SetRenderDrawColor(renderer,240,240,240,255);
+                                }if (r.y > 85 && r.y < 600){
+                                    r.y -=35;
+                                    SDL_RenderDrawRect(renderer, &r);
+                                }
+                                SDL_SetRenderDrawColor(renderer,40,40,40,255);
+                            }
+                        }
+                        else{
                         for (int i=0;i<numberOfPatients;i++)
                         {
-                            if (mouse.y>55+35*i && mouse.y<85+35*i)//Test if the cursor is on a button when the user left click
+                            if (i == 14){break;}
+                            if (mouse.y>80+35*i && mouse.y<105+35*i)//Test if the cursor is on a button when the user left click
                             {
-                                if (patientToPrint!=i)//The program does not execute this part if the user push the same button than previously
+                                if (patientToPrint!=i + scroll)//The program does not execute this part if the user push the same button than previously
                                 {
                                     /*clear the button highlighting from the last patient*/
                                     r.x = 12;
-                                    r.y = 57 + 35*patientToPrint;
+                                    r.y = 82 + 35*(patientToPrint - scroll);
                                     r.h = 26;
                                     r.w = width/4 - 24;
                                     SDL_RenderDrawRect(renderer, &r);
 
-                                    patientToPrint = i;
+                                    patientToPrint = i + scroll;
 
                                     /*Highlight the button which have been pushed*/
                                     SDL_SetRenderDrawColor(renderer,240,240,240,255);
-                                    r.y = 57 + 35*patientToPrint;
+                                    r.y = 82 + 35*(patientToPrint - scroll);
                                     SDL_RenderDrawRect(renderer, &r);
                                     SDL_SetRenderDrawColor(renderer,40,40,40,255);
                                     {//personnal infos
@@ -607,7 +709,7 @@ int main(int argc, char *argv[])
                                     r.y = 258;
                                     SDL_RenderFillRect(renderer,&r);//hide previous content
                                     SDL_RenderCopy(renderer,texture,NULL,&r);}
-                                    {heure[0] = ((patients[patientToPrint].medicalExamDuration[0])/60)/10 + '0';//tps exam
+                                    {heure[0] = ((patients[patientToPrint].medicalExamDuration[0])/60)/10 + '0';//exam duration
                                     heure[1] = ((patients[patientToPrint].medicalExamDuration[0])/60)%10 + '0';
                                     heure[3] = ((patients[patientToPrint].medicalExamDuration[0])%60)/10 + '0';
                                     heure[4] = ((patients[patientToPrint].medicalExamDuration[0])%60)%10 + '0';
@@ -788,12 +890,16 @@ int main(int argc, char *argv[])
                                 break;
                             }
                         }
+                        }
                     }
-                    break;
                 }
+                break;
+
+            default:
+                break;
             }
         }
-        SDL_RenderCopy(renderer,texture,NULL,&r);
+        //SDL_RenderCopy(renderer,texture,NULL,&r);
         SDL_RenderPresent(renderer);
     }
     //End of the event loop
