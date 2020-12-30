@@ -13,17 +13,7 @@
  * \version 1.0
  * \date 12.11.2020
  ***********************************************/
-/*
-Old funtion that was used to display the results of the simulation before the creation of the GUI.
-In its current state, the function does not display all the infos, do not use without completing it.
-void print_info(patient *patient)
-{
-    printf("\n");
-    printf("name : %s\n",patient->name);
-    printf("arrival hour : %dh%d\n",patient->arrivalHour[HOUR],patient->arrivalHour[MINUTE]);
-    printf("circuit : %d\n",patient->circuit);
-    printf("leave hour : %dh%d\n",patient->disponibilityHour[HOUR],patient->disponibilityHour[MINUTE]);
-}*/
+
 
 patient* create_patient_list(short* nbrOfPatients)
 {
@@ -31,17 +21,15 @@ patient* create_patient_list(short* nbrOfPatients)
     isNameRandomlyGenerated = get_random_generation_preference("patient name");
     isDurationRandomlyGenerated = get_random_generation_preference("exam duration");
     isArrivalHourRandomlyGenerated = get_random_generation_preference("arrival hour");
-    int numberOfPatients;
     printf("Number of patients : ");
-    scanf("%d",&numberOfPatients);
-    *nbrOfPatients = numberOfPatients;
+    scanf("%d",nbrOfPatients);
     patient* patient_list = NULL;
-    patient_list = (patient *)malloc(numberOfPatients * sizeof(patient));
+    patient_list = (patient *)malloc((*nbrOfPatients) * sizeof(patient));
     if (patient_list == NULL)
     {
         exit(0);
     }
-    for (int i=0;i<numberOfPatients;i++)//Patients registration
+    for (int i=0;i<(*nbrOfPatients);i++)//Patients registration
     {
         input_patient_informations(&patient_list[i],isDurationRandomlyGenerated,isArrivalHourRandomlyGenerated,isNameRandomlyGenerated);
     }
@@ -108,7 +96,10 @@ void input_patient_informations(patient *patient, bool isDurationRandom, bool is
 
     if (isDurationRandom)
     {
-        patient->medicalExamDuration[0] = generate_duration_with_box_muller_method(10,1);
+        patient->medicalExamDuration[0] = generate_duration_with_box_muller_method(5,1);
+        if (patient->medicalExamDuration[0] < 1){
+            patient->medicalExamDuration[0] = 1;
+        }
         patient->medicalExamDuration[1] = generate_duration_with_box_muller_method(10,1);
         patient->medicalExamDuration[2] = generate_duration_with_box_muller_method(30,5);
         if (patient->circuit == VERY_LONG)

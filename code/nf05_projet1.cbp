@@ -42,6 +42,10 @@
 			<Add directory="C:/Program Files (x86)/CodeBlocks/SDL2-devel-2.0.12-mingw/SDL2-2.0.12/x86_64-w64-mingw32/lib" />
 			<Add directory="C:/Program Files (x86)/CodeBlocks/SDL2-devel-2.0.12-mingw/SDL2_ttf-2.0.15/x86_64-w64-mingw32/lib" />
 		</Linker>
+		<Unit filename="gui.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="gui.h" />
 		<Unit filename="input_patients.c">
 			<Option compilerVar="CC" />
 		</Unit>
