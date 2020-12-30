@@ -20,13 +20,13 @@
 void declare_waiting_room_as_empty(waitingRoom *waitingRoom);
 
  /********************************************//**
- * \fn set_disponibility_hour(int (*disponibilityHour)[],int h,int m)
+ * \fn set_disponibility_hour(int (*availabilityHour)[],int h,int m)
  * \brief Function that sets the availability hour of a room to a time in hh/mm format
- * \param int (*disponibilityHour)[] : a pointer to the element that is to be modified
+ * \param int (*availabilityHour)[] : a pointer to the element that is to be modified
  * \param int h : hours
  * \param int m : minutes
  ***********************************************/
-void set_disponibility_hour(int (*disponibilityHour)[],int h,int m);
+void set_disponibility_hour(int (*availabilityHour)[],int h,int m);
 
  /********************************************//**
  * \fn box create_box(int numberOfExamRoom);

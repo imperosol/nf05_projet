@@ -91,8 +91,8 @@ void input_patient_informations(patient *patient, bool isDurationRandom, bool is
         scanf("%d",&(patient->arrivalHour[MINUTE]));
     }
 
-    patient->disponibilityHour[HOUR] = patient->arrivalHour[HOUR];
-    patient->disponibilityHour[MINUTE] = patient->arrivalHour[MINUTE];
+    patient->availabilityHour[HOUR] = patient->arrivalHour[HOUR];
+    patient->availabilityHour[MINUTE] = patient->arrivalHour[MINUTE];
 
     if (isDurationRandom)
     {

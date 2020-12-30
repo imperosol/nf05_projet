@@ -28,7 +28,7 @@ typedef struct
  * \struct patient
  * \brief structure that contains all the necessary infos about a patient
  * the <b>patient</b> structure stores all informations about a patient : name and surnam, arrival hour, starting and ending hour for each one of his exams
- * duration of each exam, circuit taken (short, long without complementary exam or long with complementary exam). The variable disponibilityHour describes the moment when a patient
+ * duration of each exam, circuit taken (short, long without complementary exam or long with complementary exam). The variable availabilityHour describes the moment when a patient
  * can pass the next exam of the exam room is free and is updated after every exam. examNumber is incremented after every exam.
  ***********************************************/
 typedef struct
@@ -36,7 +36,7 @@ typedef struct
     char name[20];/**< The patient's name */
     char surname[20];/**< The patient's surname */
     int arrivalHour[2];/**< Patient arrival time */
-    int disponibilityHour[2];/**< time the patient is available for the next exam */
+    int availabilityHour[2];/**< time the patient is available for the next exam */
     int medicalExamDuration[4];/**< exam duration array */
     short circuit;/**< circuit taken by the patient */
     hourStartEnd examStart[4];/**< Starting time of each exam */

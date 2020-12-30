@@ -282,8 +282,8 @@ void display_global_statistics(SDL_Renderer* renderer, patient patient_list[], c
     tempMinute = 0;
     for (int i = 0; i < numberOfPatients; i++)
     {
-        tempMinute += patient_list[i].disponibilityHour[MINUTE] - patient_list[i].arrivalHour[MINUTE];
-        tempMinute += (patient_list[i].disponibilityHour[HOUR] - patient_list[i].arrivalHour[HOUR]) * 60;
+        tempMinute += patient_list[i].availabilityHour[MINUTE] - patient_list[i].arrivalHour[MINUTE];
+        tempMinute += (patient_list[i].availabilityHour[HOUR] - patient_list[i].arrivalHour[HOUR]) * 60;
         tempMinute -= (patient_list[i].medicalExamDuration[0]
                        + patient_list[i].medicalExamDuration[1]
                        + patient_list[i].medicalExamDuration[2]
@@ -310,8 +310,8 @@ void display_global_statistics(SDL_Renderer* renderer, patient patient_list[], c
     tempMinute = 0;
     for (int i = 0; i < numberOfPatients; i++)
     {
-        tempMinute += patient_list[i].disponibilityHour[MINUTE] - patient_list[i].arrivalHour[MINUTE];
-        tempMinute += (patient_list[i].disponibilityHour[HOUR] - patient_list[i].arrivalHour[HOUR]) * 60;
+        tempMinute += patient_list[i].availabilityHour[MINUTE] - patient_list[i].arrivalHour[MINUTE];
+        tempMinute += (patient_list[i].availabilityHour[HOUR] - patient_list[i].arrivalHour[HOUR]) * 60;
     }
     tempMinute/=numberOfPatients;
     convert_minutes_to_displayable_hour(tempMinute, str_time);
@@ -573,7 +573,7 @@ void display_patient_individual_informations(SDL_Renderer* renderer, patient pat
     convert_hh_mm_to_displayable_hour(patientToPrint.arrivalHour[HOUR], patientToPrint.arrivalHour[MINUTE], str_time);
     display_text(renderer, str_time, p_font, text_color, xPosition + 103, 613);
     /*Exit hour*/
-    convert_hh_mm_to_displayable_hour(patientToPrint.disponibilityHour[HOUR], patientToPrint.disponibilityHour[MINUTE], str_time);
+    convert_hh_mm_to_displayable_hour(patientToPrint.availabilityHour[HOUR], patientToPrint.availabilityHour[MINUTE], str_time);
     display_text(renderer, str_time, p_font, text_color, xPosition + 83, 638);
 }
 
