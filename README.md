@@ -1,7 +1,5 @@
-# nf05_projet
-
-Projet NF05
-Thomas Girod - Kevin Hernandez
+# Projet NF05
+# Thomas Girod - Kevin Hernandez
 
 ATTENTION : 	Ce programme a été développé pour fonctionner sur 
 		des ordinateurs 64-bits fonctionnant avec le système 
