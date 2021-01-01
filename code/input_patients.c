@@ -96,7 +96,7 @@ void input_patient_informations(patient *patient, bool isDurationRandom, bool is
 
     if (isDurationRandom)
     {
-        patient->medicalExamDuration[0] = generate_duration_with_box_muller_method(5,1);
+        patient->medicalExamDuration[0] = generate_duration_with_box_muller_method(5,1) > 1;
         if (patient->medicalExamDuration[0] < 1){
             patient->medicalExamDuration[0] = 1;
         }

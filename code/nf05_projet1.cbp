@@ -46,6 +46,10 @@
 			<Option compilerVar="CC" />
 		</Unit>
 		<Unit filename="gui.h" />
+		<Unit filename="gui_result_presentation.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="gui_result_presentation.h" />
 		<Unit filename="input_patients.c">
 			<Option compilerVar="CC" />
 		</Unit>

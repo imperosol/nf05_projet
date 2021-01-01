@@ -54,7 +54,7 @@ bool get_random_generation_preference(char sentence[]);
  * \fn generate_duration_with_box_muller_method(short mean, short variance);
  * \brief Function that generates a random number number following the normal law with a given mean and variance. The Box-Muller method is used for this purpose.
  * This randomly generated number is used to determine the duration of the exams. This duration is in minutes.
- * For example, registration exam have a mean of 10 and a variance of 1. The medical exams have a mean of 30 and a variance of 15.
+ * For example, the registration has a mean of 5 and a variance of 1. The NRO exam has a mean of 10 and a variance of 1. The medical exams have a mean of 30 and a variance of 15.
  *
  * \param short mean : the mean of the normal law that number that is to be generated follows
  * \param short variance : the variance of the normal law that number that is to be generated follows

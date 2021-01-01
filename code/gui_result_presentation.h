@@ -1,5 +1,13 @@
 #include "struct.h"
 
+/********************************************//**
+ * \file gui_result_presentation.h
+ * \brief Header of gui_result_presentation.c
+ * \author Thomas Girod
+ * \version 1.0
+ * \date 27.11.2020
+ ***********************************************/
+
 #ifndef GUIRESULT_H
 #define GUIRESULT_H
 

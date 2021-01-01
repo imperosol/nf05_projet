@@ -10,6 +10,7 @@
 #include "sort.h"
 #include "room_management.h"
 #include "gui.h"
+#include "gui_result_presentation.h"
 
 
 /********************************************//**
@@ -36,93 +37,93 @@
  ***********************************************/
 
 
-int main(int argc, char *argv[])
+int main (int argc, char *argv[])
 {
-    srand((int)time (NULL));
-    puts("Welcome in our hospital management program in C for NF05.\nPlease write in the shell the informations which you shall be asked for\n\n");
+    srand ((int)time (NULL));
+    puts ("Welcome in our hospital management program in C for NF05.\nPlease write in the shell the informations which you shall be asked for\n\n");
 
     /*Creation of the list which contains all the patient instances*/
     short numberOfPatients;
-    patient* patients = create_patient_list(&numberOfPatients);
+    patient* patients = create_patient_list (&numberOfPatients);
     /*Initialisation of all room structures*/
     examRoom registrationRoom;
     examRoom examNRO;
-    box boxShortCircuit = create_box(2);
-    box boxLongCircuit = create_box(3);
-    box boxVeryLongCircuit = create_box(2);
+    box boxShortCircuit = create_box (2);
+    box boxLongCircuit = create_box (3);
+    box boxVeryLongCircuit = create_box (2);
     waitingRoom hospitalExit;//The hospital exit is considered as a waiting room with no following exam
     waitingRoom waitingRoom[5];
     //for the sake of the program, it will be considered that there is a waiting room between the two exam boxes of the long circuit
 
-    for (int i=0;i<5;i++)//All the waiting rooms are declared as empty
+    for (int i = 0; i < 5; i++)//All the waiting rooms are declared as empty
     {
         declare_waiting_room_as_empty(&waitingRoom[i]);
     }
     declare_waiting_room_as_empty(&hospitalExit);
     qsort(patients,numberOfPatients,sizeof(*patients),sort_by_arrival_hour);//sort patient by arrival hour
 
-    //set all rooms as disposable from 00h00
-    set_disponibility_hour(&(registrationRoom.endOfExamHour), 0,0);
-    set_disponibility_hour(&(examNRO.endOfExamHour),0,0);
+    /*set all rooms as disposable from 00h00*/
+    set_availability_hour(&(registrationRoom.endOfExamHour), 0,0);
+    set_availability_hour(&(examNRO.endOfExamHour),0,0);
 
     waitingRoom[0].numberOfPatients = numberOfPatients;
 
     for (int i=0;waitingRoom[0].numberOfPatients>0;i++)//first registration (is considered as an exam)
     {
-        exam_of_the_patient(&patients[i],&waitingRoom[0],&waitingRoom[1],&registrationRoom,patients[i].medicalExamDuration[0]);
+        exam_of_the_patient (&patients[i],&waitingRoom[0],&waitingRoom[1],&registrationRoom,patients[i].medicalExamDuration[0]);
     }
     for (int i=0;waitingRoom[1].numberOfPatients>0;i++)//NRO exam in which patients are separated between short and long circuit
     {
         if (patients[i].circuit==SHORT)
         {
-            exam_of_the_patient(&patients[i],&waitingRoom[1],&waitingRoom[3],&examNRO,patients[i].medicalExamDuration[1]);
-            add_patient_in_waiting_room(i,&waitingRoom[3]);
+            exam_of_the_patient (&patients[i], &waitingRoom[1], &waitingRoom[3], &examNRO, patients[i].medicalExamDuration[1]);
+            add_patient_in_waiting_room (i, &waitingRoom[3]);
         }
         else
         {
-            exam_of_the_patient(&patients[i],&waitingRoom[1],&waitingRoom[2],&examNRO,patients[i].medicalExamDuration[1]);
-            add_patient_in_waiting_room(i,&waitingRoom[2]);
+            exam_of_the_patient (&patients[i], &waitingRoom[1], &waitingRoom[2], &examNRO, patients[i].medicalExamDuration[1]);
+            add_patient_in_waiting_room (i, &waitingRoom[2]);
         }
     }
 
     for (int i=0;waitingRoom[3].numberOfPatients>0;i++)//medical exam of the short circuit
     {
         /*Only patients in the short circuit are here, so circuit tests are useless*/
-        exam_of_the_patient(&(patients[waitingRoom[3].remainingPatients[i]]),&waitingRoom[3],&hospitalExit,&(boxShortCircuit.examRoom[1]),patients[waitingRoom[3].remainingPatients[i]].medicalExamDuration[2]);
+        exam_of_the_patient (&(patients[waitingRoom[3].remainingPatients[i]]), &waitingRoom[3], &hospitalExit, &(boxShortCircuit.examRoom[1]), patients[waitingRoom[3].remainingPatients[i]].medicalExamDuration[2]);
         /*sort the exam rooms to make the next room to be available the first element of the list*/
-        qsort(boxShortCircuit.examRoom,3,sizeof(*boxShortCircuit.examRoom),sort_by_disponibility_hour);
+        qsort (boxShortCircuit.examRoom, 3, sizeof(*boxShortCircuit.examRoom), sort_by_disponibility_hour);
     }
     /*freeing of memory space for the patient list in the waiting room*/
     free(waitingRoom[3].remainingPatients);
 
     for (int i=0;waitingRoom[2].numberOfPatients>0;i++)//first medical exam of the long circuit
     {
-        qsort(boxLongCircuit.examRoom,3,sizeof(*boxLongCircuit.examRoom),sort_by_disponibility_hour);
+        qsort(boxLongCircuit.examRoom, 3, sizeof(*boxLongCircuit.examRoom), sort_by_disponibility_hour);
         if (patients[waitingRoom[2].remainingPatients[i]].circuit==LONG)
         {
-            exam_of_the_patient(&patients[waitingRoom[2].remainingPatients[i]],&waitingRoom[2],&hospitalExit,&boxLongCircuit.examRoom[0],patients[waitingRoom[2].remainingPatients[i]].medicalExamDuration[2]);
+            exam_of_the_patient(&patients[waitingRoom[2].remainingPatients[i]], &waitingRoom[2], &hospitalExit, &boxLongCircuit.examRoom[0], patients[waitingRoom[2].remainingPatients[i]].medicalExamDuration[2]);
         }
         else
         {
-            exam_of_the_patient(&patients[waitingRoom[2].remainingPatients[i]],&waitingRoom[2],&waitingRoom[4],&boxLongCircuit.examRoom[1],patients[waitingRoom[2].remainingPatients[i]].medicalExamDuration[2]);
-            add_patient_in_waiting_room(waitingRoom[2].remainingPatients[i],&waitingRoom[4]);
+            exam_of_the_patient (&patients[waitingRoom[2].remainingPatients[i]], &waitingRoom[2], &waitingRoom[4], &boxLongCircuit.examRoom[1], patients[waitingRoom[2].remainingPatients[i]].medicalExamDuration[2]);
+            add_patient_in_waiting_room (waitingRoom[2].remainingPatients[i], &waitingRoom[4]);
         }
     }
     /*freeing of memory space for the patient list in the waiting room*/
     free(waitingRoom[2].remainingPatients);
 
-    for (int i=0;waitingRoom[4].numberOfPatients>0;i++)//Last exam of the very long circuit
+    for (int i=0 ; waitingRoom[4].numberOfPatients > 0 ; i++)//Last exam of the very long circuit
     {
-        qsort(boxVeryLongCircuit.examRoom,3,sizeof(*boxVeryLongCircuit.examRoom),sort_by_disponibility_hour);
-        exam_of_the_patient(&patients[waitingRoom[4].remainingPatients[i]],&waitingRoom[4],&hospitalExit,&boxVeryLongCircuit.examRoom[0],patients[waitingRoom[4].remainingPatients[i]].medicalExamDuration[3]);
+        qsort (boxVeryLongCircuit.examRoom, 3, sizeof(*boxVeryLongCircuit.examRoom), sort_by_disponibility_hour);
+        exam_of_the_patient (&patients[waitingRoom[4].remainingPatients[i]], &waitingRoom[4], &hospitalExit, &boxVeryLongCircuit.examRoom[0], patients[waitingRoom[4].remainingPatients[i]].medicalExamDuration[3]);
     }
     /*freeing of memory space for the patient list in the waiting room*/
     free(waitingRoom[4].remainingPatients);
 
-    /***************************************** - GUI START - *****************************************/
+    /***************************************** - GUI FOR RESULT PRESENTATION START - *****************************************/
 
     if (SDL_Init(SDL_INIT_EVERYTHING) ==-1)/*Initialisation SDL*/{
-        printf("window initialization failure due to : %s",SDL_GetError());  exit(EXIT_FAILURE);
+       printf("window initialization failure due to : %s",SDL_GetError());  exit(EXIT_FAILURE);
     }if (SDL_Init(TTF_Init()) == -1){
         printf("window initialization failure due to : %s",SDL_GetError());  exit(EXIT_FAILURE);
     }
@@ -135,7 +136,7 @@ int main(int argc, char *argv[])
     }
 
     /*pointers definition*/
-    SDL_Renderer* renderer = SDL_CreateRenderer(pWindow,-1,SDL_RENDERER_ACCELERATED);//renderer
+    SDL_Renderer* renderer = SDL_CreateRenderer (pWindow,-1,SDL_RENDERER_ACCELERATED);//renderer
     SDL_Surface* icon = NULL;
     SDL_Surface* pageText = NULL;//page text surface
     SDL_Texture* texture = NULL;//The same texture is used and redefined all along the program
@@ -157,15 +158,15 @@ int main(int argc, char *argv[])
     SDL_SetRenderDrawColor(renderer,40,40,40,255);
     SDL_RenderClear(renderer);
 
-    display_top_square(renderer, icon, text_color, width, height);
-    display_buttons(renderer, numberOfPatients, 1, width, height, text_color, button_font);
+    display_top_square (renderer, icon, text_color, width, height);
+    display_buttons (renderer, numberOfPatients, 1, width, height, text_color, button_font);
 
-    display_patient_panel(renderer, width, height, text_color, button_font);
+    display_patient_panel (renderer, width, height, text_color, button_font);
     display_patient_constant_informations(renderer, width, height, text_color, p_font);
 
-    display_global_statistics(renderer, patients, numberOfPatients, height, width, p_font, text_color);
+    display_global_statistics (renderer, patients, numberOfPatients, height, width, p_font, text_color);
 
-    SDL_SetRenderDrawColor(renderer,40,40,40,255);
+    SDL_SetRenderDrawColor (renderer,40,40,40,255);
 
     /****Start of the event loop****/
     SDL_Event event;
@@ -191,13 +192,13 @@ int main(int argc, char *argv[])
                         /*event click on the up arrow*/
                         if (mouse.y > 85 && mouse.y < 105 && scroll)
                         {
-                            scroll = event_click_on_up_arrow(renderer, numberOfPatients, scroll, patientToPrint, width, text_color, button_font);
+                            scroll = event_click_on_up_arrow (renderer, numberOfPatients, scroll, patientToPrint, width, text_color, button_font);
                         }
 
                         /*event click on the down arrow*/
                         else if (mouse.y > 875 && mouse.y < 895 && scroll+17 < numberOfPatients)
                         {
-                            scroll = event_click_on_down_arrow(renderer, numberOfPatients, scroll, patientToPrint, width, text_color, button_font);
+                            scroll = event_click_on_down_arrow (renderer, numberOfPatients, scroll, patientToPrint, width, text_color, button_font);
                         }
 
                         /*event click on a button*/
@@ -205,25 +206,28 @@ int main(int argc, char *argv[])
                         {
                             for (int i=0;i<numberOfPatients;i++)
                             {
-                                if (i == 17){break;}
-                                if (mouse.y>110+45*i && mouse.y<150+45*i)//Test if the cursor is on a button when the user left click
+                                if (i == 17)
+                                {
+                                    break;
+                                }
+                                if (mouse.y>110+45*i && mouse.y<150+45*i)//Test if the cursor is on a button when the user left clicks
                                 {
                                     if (patientToPrint!=i + scroll)//The program does not execute this part if the user push the same button than previously
                                     {
                                         /*clear the button highlighting from the last patient*/
-                                        highlight_button(renderer, patientToPrint-scroll, width);
-                                        hide_patient_individual_top_panel(renderer, patients[patientToPrint], width, text_color, button_font);
-                                        hide_patient_individual_informations(renderer, width, text_color, p_font);
+                                        highlight_button (renderer, patientToPrint-scroll, width);
+                                        hide_patient_individual_top_panel (renderer, patients[patientToPrint], width, text_color, button_font);
+                                        hide_patient_individual_informations (renderer, width, text_color, p_font);
 
                                         patientToPrint = i + scroll;
 
                                         /*Highlight the button which have been pushed*/
-                                        SDL_SetRenderDrawColor(renderer,240,240,240,255);
-                                        highlight_button(renderer, patientToPrint-scroll, width);
-                                        SDL_SetRenderDrawColor(renderer,40,40,40,255);
+                                        SDL_SetRenderDrawColor (renderer, 240, 240, 240, 255);
+                                        highlight_button (renderer, patientToPrint-scroll, width);
+                                        SDL_SetRenderDrawColor (renderer, 40, 40, 40, 255);
 
-                                        display_patient_individual_top_panel(renderer, patients[patientToPrint], width, text_color, button_font);
-                                        display_patient_individual_informations(renderer, patients[patientToPrint], width, text_color, p_font);
+                                        display_patient_individual_top_panel (renderer, patients[patientToPrint], width, text_color, button_font);
+                                        display_patient_individual_informations (renderer, patients[patientToPrint], width, text_color, p_font);
                                     }
                                     break;
                                 }
@@ -239,7 +243,7 @@ int main(int argc, char *argv[])
         }
         SDL_RenderPresent(renderer);
     }
-    /*End of the event loop*/
+    /****End of the event loop****/
 
     SDL_DestroyTexture(texture);
     SDL_DestroyRenderer(renderer);

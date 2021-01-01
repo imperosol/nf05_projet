@@ -20,7 +20,7 @@
 int sort_by_arrival_hour (const void *a,const void *b);//applies to patients
 
  /********************************************//**
- * \fn declare_waiting_room_as_empty(waitingRoom *waitingRoom)
+ * \fn int sort_by_disponibility_hour(const void *a,const void *b)
  * \brief Function that sorts the elements of an examRoom array.
  * \param const void *a
  * \param const void *b

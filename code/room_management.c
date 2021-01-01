@@ -21,10 +21,10 @@ void declare_waiting_room_as_empty(waitingRoom* waitingRoom)
     waitingRoom->remainingPatients = NULL;
 }
 
-void set_disponibility_hour(int (*availabilityHour)[],int h,int m)
+void set_availability_hour(int availabilityHour[],int h,int m)
 {
-    (*availabilityHour)[HOUR] = h;
-    (*availabilityHour)[MINUTE] = m;
+    availabilityHour[HOUR] = h;
+    availabilityHour[MINUTE] = m;
 }
 
 box create_box(int numberOfExamRoom)
@@ -37,7 +37,7 @@ box create_box(int numberOfExamRoom)
     }
     for (int i=0; i<numberOfExamRoom; i++)
     {
-        set_disponibility_hour(&(t_box.examRoom[i].endOfExamHour), 0, 0);
+        set_availability_hour(t_box.examRoom[i].endOfExamHour, 0, 0);
     }
     return t_box;
 }
