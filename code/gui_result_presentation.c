@@ -240,6 +240,8 @@ void display_global_statistics(SDL_Renderer* renderer, patient patient_list[], c
                        + patient_list[i].medicalExamDuration[2]
                        + (patient_list[i].medicalExamDuration[3]*(patient_list[i].circuit==VERY_LONG)));
     }
+    /*The value of the integer to be divided may be increased so that the result of the integer division is a rounding and not a truncation. */
+    if (tempMinute%numberOfPatients > numberOfPatients/2){tempMinute += numberOfPatients;}
     tempMinute/=numberOfPatients;
     convert_minutes_to_displayable_hour(tempMinute, str_time);
     display_text(renderer, str_time, p_font, text_color, xPosition+156, win_height - 324);
@@ -253,6 +255,8 @@ void display_global_statistics(SDL_Renderer* renderer, patient patient_list[], c
                        + patient_list[i].medicalExamDuration[2]
                        + (patient_list[i].medicalExamDuration[3]*(patient_list[i].circuit==VERY_LONG)));
     }
+    /*The value of the integer to be divided may be increased so that the result of the integer division is a rounding and not a truncation. */
+    if (tempMinute%numberOfPatients > numberOfPatients/2){tempMinute += numberOfPatients;}
     tempMinute/=numberOfPatients;
     convert_minutes_to_displayable_hour(tempMinute, str_time);
     display_text(renderer, str_time, p_font, text_color, xPosition+142, win_height - 300);
@@ -264,6 +268,8 @@ void display_global_statistics(SDL_Renderer* renderer, patient patient_list[], c
         tempMinute += patient_list[i].availabilityHour[MINUTE] - patient_list[i].arrivalHour[MINUTE];
         tempMinute += (patient_list[i].availabilityHour[HOUR] - patient_list[i].arrivalHour[HOUR]) * 60;
     }
+    /*The value of the integer to be divided may be increased so that the result of the integer division is a rounding and not a truncation. */
+    if (tempMinute%numberOfPatients > numberOfPatients/2){tempMinute += numberOfPatients;}
     tempMinute/=numberOfPatients;
     convert_minutes_to_displayable_hour(tempMinute, str_time);
     display_text(renderer, str_time, p_font, text_color, xPosition+180, win_height - 276);
@@ -275,6 +281,8 @@ void display_global_statistics(SDL_Renderer* renderer, patient patient_list[], c
         tempMinute += patient_list[i].examStart[0].hour[MINUTE] - patient_list[i].arrivalHour[MINUTE];
         tempMinute += (patient_list[i].examStart[0].hour[HOUR] - patient_list[i].arrivalHour[HOUR]) * 60;
     }
+    /*The value of the integer to be divided may be increased so that the result of the integer division is a rounding and not a truncation. */
+    if (tempMinute%numberOfPatients > numberOfPatients/2){tempMinute += numberOfPatients;}
     tempMinute/=numberOfPatients;
     convert_minutes_to_displayable_hour(tempMinute, str_time);
     display_text(renderer, str_time, p_font, text_color, xPosition+235, win_height - 216);
@@ -285,6 +293,8 @@ void display_global_statistics(SDL_Renderer* renderer, patient patient_list[], c
     {
         tempMinute += patient_list[i].medicalExamDuration[0];
     }
+    /*The value of the integer to be divided may be increased so that the result of the integer division is a rounding and not a truncation. */
+    if (tempMinute%numberOfPatients > numberOfPatients/2){tempMinute += numberOfPatients;}
     tempMinute/=numberOfPatients;
     convert_minutes_to_displayable_hour(tempMinute, str_time);
     display_text(renderer, str_time, p_font, text_color, xPosition + 252, win_height - 186);
@@ -296,6 +306,8 @@ void display_global_statistics(SDL_Renderer* renderer, patient patient_list[], c
         tempMinute += patient_list[i].examStart[1].hour[MINUTE] - patient_list[i].examEnd[0].hour[MINUTE];
         tempMinute += (patient_list[i].examStart[1].hour[HOUR] - patient_list[i].examEnd[0].hour[HOUR]) * 60;
     }
+    /*The value of the integer to be divided may be increased so that the result of the integer division is a rounding and not a truncation. */
+    if (tempMinute%numberOfPatients > numberOfPatients/2){tempMinute += numberOfPatients;}
     tempMinute/=numberOfPatients;
     convert_minutes_to_displayable_hour(tempMinute, str_time);
     display_text(renderer, str_time, p_font, text_color, xPosition+235, win_height - 156);
@@ -306,6 +318,8 @@ void display_global_statistics(SDL_Renderer* renderer, patient patient_list[], c
     {
         tempMinute += patient_list[i].medicalExamDuration[1];
     }
+    /*The value of the integer to be divided may be increased so that the result of the integer division is a rounding and not a truncation. */
+    if (tempMinute%numberOfPatients > numberOfPatients/2){tempMinute += numberOfPatients;}
     tempMinute/=numberOfPatients;
     convert_minutes_to_displayable_hour(tempMinute, str_time);
     display_text(renderer, str_time, p_font, text_color, xPosition + 174, win_height - 126);
@@ -322,6 +336,8 @@ void display_global_statistics(SDL_Renderer* renderer, patient patient_list[], c
             tempMinute += (patient_list[i].examStart[2].hour[HOUR] - patient_list[i].examEnd[1].hour[HOUR]) * 60;
         }
     }
+    /*The value of the integer to be divided may be increased so that the result of the integer division is a rounding and not a truncation. */
+    if (tempMinute%patientsInCircuit > patientsInCircuit/2){tempMinute += patientsInCircuit;}
     tempMinute = (patientsInCircuit) ? tempMinute/patientsInCircuit : 0;
     convert_minutes_to_displayable_hour(tempMinute, str_time);
     display_text(renderer, str_time, p_font, text_color, xPosition+235, win_height - 96);
@@ -337,6 +353,7 @@ void display_global_statistics(SDL_Renderer* renderer, patient patient_list[], c
             patientsInCircuit++;
         }
     }
+    if (tempMinute%patientsInCircuit > patientsInCircuit/2){tempMinute += patientsInCircuit;}
     tempMinute = (patientsInCircuit) ? tempMinute/patientsInCircuit : 0;
     convert_minutes_to_displayable_hour(tempMinute, str_time);
     display_text(renderer, str_time, p_font, text_color, xPosition + 267, win_height - 66);
@@ -355,6 +372,8 @@ void display_global_statistics(SDL_Renderer* renderer, patient patient_list[], c
             tempMinute += (patient_list[i].examStart[2].hour[HOUR] - patient_list[i].examEnd[1].hour[HOUR]) * 60;
         }
     }
+    /*The value of the integer to be divided may be increased so that the result of the integer division is a rounding and not a truncation. */
+    if (tempMinute%patientsInCircuit > patientsInCircuit/2){tempMinute += patientsInCircuit;}
     tempMinute = (patientsInCircuit) ? tempMinute/patientsInCircuit : 0; // To avoid division by 0
     convert_minutes_to_displayable_hour(tempMinute, str_time);
     display_text(renderer, str_time, p_font, text_color, xPosition+235, win_height - 156);
@@ -370,6 +389,8 @@ void display_global_statistics(SDL_Renderer* renderer, patient patient_list[], c
             patientsInCircuit++;
         }
     }
+    /*The value of the integer to be divided may be increased so that the result of the integer division is a rounding and not a truncation. */
+    if (tempMinute%patientsInCircuit > patientsInCircuit/2){tempMinute += patientsInCircuit;}
     tempMinute = (patientsInCircuit) ? tempMinute/patientsInCircuit : 0;
     convert_minutes_to_displayable_hour(tempMinute, str_time);
     display_text(renderer, str_time, p_font, text_color, xPosition + 295, win_height - 126);
@@ -386,6 +407,8 @@ void display_global_statistics(SDL_Renderer* renderer, patient patient_list[], c
             tempMinute += (patient_list[i].examStart[3].hour[HOUR] - patient_list[i].examEnd[2].hour[HOUR]) * 60;
         }
     }
+    /*The value of the integer to be divided may be increased so that the result of the integer division is a rounding and not a truncation. */
+    if (tempMinute%patientsInCircuit > patientsInCircuit/2){tempMinute += patientsInCircuit;}
     tempMinute = (patientsInCircuit) ? tempMinute/patientsInCircuit : 0;
     convert_minutes_to_displayable_hour(tempMinute, str_time);
     display_text(renderer, str_time, p_font, text_color, xPosition+235, win_height - 96);
@@ -401,6 +424,8 @@ void display_global_statistics(SDL_Renderer* renderer, patient patient_list[], c
             patientsInCircuit++;
         }
     }
+    /*The value of the integer to be divided may be increased so that the result of the integer division is a rounding and not a truncation. */
+    if (tempMinute%patientsInCircuit > patientsInCircuit/2){tempMinute += patientsInCircuit;}
     tempMinute = (patientsInCircuit) ? tempMinute/patientsInCircuit : 0;
     convert_minutes_to_displayable_hour(tempMinute, str_time);
     display_text(renderer, str_time, p_font, text_color, xPosition + 321, win_height - 66);

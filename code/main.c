@@ -129,19 +129,23 @@ int main (int argc, char *argv[])
     }
 
     SDL_Window* pWindow = NULL;
-    pWindow = SDL_CreateWindow("Hospital management", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_UNDEFINED, 1200, 900, SDL_WINDOW_SHOWN);/*screen Initialisation*/
+    pWindow = SDL_CreateWindow("Hospital management", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_UNDEFINED, 1200, 900, SDL_WINDOW_FULLSCREEN_DESKTOP|SDL_WINDOW_ALLOW_HIGHDPI|SDL_WINDOW_OPENGL);/*screen Initialisation*/
     if (pWindow == NULL){
         printf("window initialization failure due to : %s",SDL_GetError());
         exit(EXIT_FAILURE);
     }
+    SDL_SetWindowFullscreen(pWindow, 0);
+    SDL_SetWindowSize(pWindow, 1200, 900);
 
     /*pointers definition*/
-    SDL_Renderer* renderer = SDL_CreateRenderer (pWindow,-1,SDL_RENDERER_ACCELERATED);//renderer
+    SDL_Renderer* renderer = SDL_CreateRenderer (pWindow,-1,SDL_RENDERER_TARGETTEXTURE);//renderer
     SDL_Surface* icon = NULL;
     SDL_Surface* pageText = NULL;//page text surface
     SDL_Texture* texture = NULL;//The same texture is used and redefined all along the program
     TTF_Font* p_font = TTF_OpenFont("./font/SEGOEUI.ttf",17);
     TTF_Font* button_font = TTF_OpenFont("./font/SEGOEUI.ttf",20);
+
+
 
     /*Variables definition*/
     int height, width;
@@ -153,6 +157,7 @@ int main (int argc, char *argv[])
     icon = SDL_LoadBMP("./img/icon.bmp");
 
     display_icon(pWindow);
+
 
     /*background colour definition*/
     SDL_SetRenderDrawColor(renderer,40,40,40,255);
